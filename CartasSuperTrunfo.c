@@ -1,68 +1,65 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
 
-class Cidade {
-private:
-    std::string nome;
+#define MAX_NOME 100
+#define MAX_CIDADES 100
+
+// Definição da struct
+typedef struct {
+    char nome[MAX_NOME];
     int populacao;
     double area;
     double pib;
     int pontosTuristicos;
+} Cidade;
 
-public:
-    // Construtor
-    Cidade(std::string n, int pop, double a, double p, int pt)
-        : nome(n), populacao(pop), area(a), pib(p), pontosTuristicos(pt) {}
-
-    // Método para exibir os dados
-    void exibirDados() const {
-        std::cout << "Cidade: " << nome << "\n";
-        std::cout << "População: " << populacao << "\n";
-        std::cout << "Área: " << area << " km²\n";
-        std::cout << "PIB: R$ " << pib << " bilhões\n";
-        std::cout << "Número de pontos turísticos: " << pontosTuristicos << "\n";
-        std::cout << "-----------------------------\n";
-    }
-};
+// Função para exibir os dados
+void exibirDados(Cidade c) {
+    printf("Cidade: %s\n", c.nome);
+    printf("População: %d\n", c.populacao);
+    printf("Área: %.2f km²\n", c.area);
+    printf("PIB: R$ %.2f bilhões\n", c.pib);
+    printf("Número de pontos turísticos: %d\n", c.pontosTuristicos);
+    printf("-----------------------------\n");
+}
 
 int main() {
-    std::vector<Cidade> cidades;
+    Cidade cidades[MAX_CIDADES];
     int quantidade;
 
-    std::cout << "Quantas cidades deseja cadastrar? ";
-    std::cin >> quantidade;
+    printf("Quantas cidades deseja cadastrar? ");
+    scanf("%d", &quantidade);
 
     for (int i = 0; i < quantidade; i++) {
-        std::string nome;
-        int populacao;
-        double area;
-        double pib;
-        int pontosTuristicos;
+        printf("\nCadastro da cidade %d:\n", i + 1);
 
-        std::cout << "\nCadastro da cidade " << (i + 1) << ":\n";
-        std::cout << "Nome: ";
-        std::cin.ignore(); // limpar buffer
-        std::getline(std::cin, nome);
+        printf("Nome: ");
+        getchar(); // limpar buffer do ENTER
+        fgets(cidades[i].nome, MAX_NOME, stdin);
 
-        std::cout << "População: ";
-        std::cin >> populacao;
+        // remover \n do fgets
+        char *p = cidades[i].nome;
+        while (*p) {
+            if (*p == '\n') { *p = '\0'; break; }
+            p++;
+        }
 
-        std::cout << "Área (km²): ";
-        std::cin >> area;
+        printf("População: ");
+        scanf("%d", &cidades[i].populacao);
 
-        std::cout << "PIB (em bilhões): ";
-        std::cin >> pib;
+        printf("Área (km²): ");
+        scanf("%lf", &cidades[i].area);
 
-        std::cout << "Número de pontos turísticos: ";
-        std::cin >> pontosTuristicos;
+        printf("PIB (em bilhões): ");
+        scanf("%lf", &cidades[i].pib);
 
-        cidades.emplace_back(nome, populacao, area, pib, pontosTuristicos);
+        printf("Número de pontos turísticos: ");
+        scanf("%d", &cidades[i].pontosTuristicos);
     }
 
-    std::cout << "\n===== Cartas de Cidades Cadastradas =====\n";
-    for (const auto& cidade : cidades) {
-        cidade.exibirDados();
+    printf("\n===== Cartas de Cidades Cadastradas =====\n");
+    for (int i = 0; i < quantidade; i++) {
+        exibirDados(cidades[i]);
     }
 
     return 0;
